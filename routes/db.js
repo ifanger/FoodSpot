@@ -3,7 +3,6 @@ var fs = require('fs');
 var router = express.Router();
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
-var url = 'mongodb://localhost:27017/blogdb';
 
 const ADDRESS = 0;
 const CITY = 1;

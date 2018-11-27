@@ -1,13 +1,28 @@
 var express = require('express');
 var router = express.Router();
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
 
 var params = {
-  title: 'irma gostosa do felipe'
+  title: 'Food Spot'
 }
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', params);
+  MongoClient.connect("mongodb://localhost:27017/foodspot", function(error, client) {
+    if (!error) {
+      const db = client.db('foodspot');
+      const restaurants = db.collection('restaurants');
+
+      const list = restaurants.find({}).limit(10);
+      
+      params.restaurants = list;
+
+      res.render('index', params);
+    } else {
+      res.send({message: 'Falha ao conectar-se com banco.'})
+    }
+  })
+
 });
 
 module.exports = router;
