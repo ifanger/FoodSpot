@@ -16,7 +16,8 @@ router.get('/', function(req, res, next) {
       const list = restaurants.find({}).limit(10);
       
       params.restaurants = list;
-
+      res.send(params);
+      return;
       res.render('index', params);
     } else {
       res.send({message: 'Falha ao conectar-se com banco.'})
