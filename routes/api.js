@@ -112,7 +112,7 @@ router.get('/restaurants', function(req, res, next) {
 /**
  * ADICIONA UM NOVO RESTAURANTE
  */
-router.post('/comment', function(req, res, next) {
+router.post('/restaurants', function(req, res, next) {
   const restaurantId = req.query.restaurant;
   const author = req.query.author;
   const message = req.query.message;
@@ -148,5 +148,20 @@ router.post('/comment', function(req, res, next) {
     });
   });
 });
+
+
+
+router.post('/login', function (req, res, next) {
+  const username = req.query.username;
+  const password = req.query.password;
+
+  if (username == 'admin' && password == 'admin') {
+    res.cookie('admin', 'true');
+    res.send({success: true});
+    return;
+  }
+
+  res.send({success: false});
+}); 
 
 module.exports = router;
