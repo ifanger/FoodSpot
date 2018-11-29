@@ -2,12 +2,11 @@ var express = require('express');
 var router = express.Router();
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
+var ObjectID = require("mongodb").ObjectID;
 
 var params = {
   title: 'Food Spot',
-  getImage: function (name) {
-    return name + ' 123';
-  },
+
   getRate: function (rates) {
     if (rates.length == 0) return 0;
 
@@ -31,19 +30,31 @@ var params = {
 }
 
 router.get('/', function(req, res, next) {
+  const restaurantId = req.query.i;
+
+  if (!restaurantId) {
+    res.send("404");
+    return;
+  }
+
+  if (restaurantId.length != 24) {
+    res.send('Restaurante invalido');
+    return;
+  }
+
   MongoClient.connect("mongodb://localhost:27017/foodspot", function(error, client) {
     if (!error) {
       const db = client.db('foodspot');
       const restaurants = db.collection('restaurants');
-
-      restaurants.find({}).limit(15).toArray(function (e, result) {
-        if (e) {
-          res.send({message: e.message});
+      
+      restaurants.findOne({_id: ObjectID(restaurantId)}, function (e, restaurant) {
+        if (e || !restaurant) {
+          res.send('Nenhum restaurante encontrado');
           return;
         }
-  
-        params.restaurants = result;
-        res.render('index', params);
+        
+        params.restaurant = restaurant;
+        res.render('detalhes', params);
       });
       
     } else {
