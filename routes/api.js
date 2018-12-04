@@ -113,22 +113,34 @@ router.get('/restaurants', function(req, res, next) {
  * ADICIONA UM NOVO RESTAURANTE
  */
 router.post('/restaurants', function(req, res, next) {
-  const restaurantId = req.query.restaurant;
-  const author = req.query.author;
-  const message = req.query.message;
+  const restaurantName = req.query.name;
+  const restaurantAddress = req.query.address;
+  const restaurantSite = req.query.site;
 
   const response = {
     success: false,
     message: null
   };
 
-  if (!restaurantId || !author || !message) {
+  if (!restaurantName || !restaurantAddress || !restaurantSite) {
     res.send(response);
     return;
   }
 
-  if (restaurantId.length != 24) {
-    response.message = 'ID do restaurante é inválido.';
+  if (restaurantName.length < 3) {
+    response.message = 'Por favor, digite um nome de restaurante válido.';
+    res.send(response);
+    return;
+  }
+
+  if (restaurantAddress.length < 3) {
+    response.message = 'Por favor, digite um endereço válido.';
+    res.send(response);
+    return;
+  }
+
+  if (restaurantSite.length < 7) {
+    response.message = 'Por favor, digite um site válido.';
     res.send(response);
     return;
   }
@@ -137,19 +149,50 @@ router.post('/restaurants', function(req, res, next) {
     const db = client.db('foodspot');
     const restaurants = db.collection('restaurants');
 
-    const comment = {
-      author,
-      message
+    let restaurant = {
+      name: restaurantName,
+      address: restaurantAddress,
+      site: restaurantSite,
+      pending: true
     };
+    restaurants.insertOne(restaurant, function (error, result) {
+      if (error) {
+        response.success = false;
+        response.message = error.message;
+        res.send(response);
+        return;
+      }
 
-    restaurants.updateOne({_id: ObjectID(restaurantId)}, {$push: {comentarios: comment}}, function (e, result) {
-      response.success = !e;
+      response.success = true;
+      response.data = "detalhes?i=" + result.insertedId;
       res.send(response);
     });
   });
 });
 
+router.delete('/restaurants', function (req, res) {
+  const restaurantId = req.query.id;
 
+  const response = {
+    success: false,
+    message: null
+  };
+
+  if (!restaurantId) {
+    res.send(response);
+    return;
+  }
+
+  MongoClient.connect("mongodb://localhost:27017/foodspot", function (error, client) {
+    const db = client.db('foodspot');
+    const restaurants = db.collection('restaurants');
+
+    restaurants.deleteOne({_id: ObjectID(restaurantId)})
+    .then(() => res.send({success: true}))
+    .catch(() => res.send({success: false}));
+  });
+
+});
 
 router.post('/login', function (req, res, next) {
   const username = req.query.username;

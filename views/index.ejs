@@ -50,10 +50,30 @@
                         <p style="font-size: 24px;margin-top: 10px;">Buscar restaurante</p><input class="border rounded d-xl-flex" type="text"><button class="btn btn-primary" type="button" style="margin-bottom: 50px;margin-top: 10px;padding-right: 60px;padding-left: 60px;background-color: rgb(43,67,83);">Buscar</button>
                         <p
                             style="font-size: 24px;margin-bottom: 16px;">Sugerir restaurante</p>
-                            <p style="margin-bottom: 0px;">Nome do restaurante</p><input class="border rounded d-xl-flex" type="text" style="margin-bottom: 30px;">
-                            <p style="margin-bottom: 0px;">Localização</p><input class="border rounded" type="text" style="margin-bottom: 30px;">
-                            <p style="margin-bottom: 0px;">Site</p><input class="border rounded" type="text">
-                            <div></div><button class="btn btn-primary" type="button" style="margin-top: 20px;padding-right: 60px;padding-left: 60px;background-color: rgb(43,67,83);">Enviar</button></div>
+                            <p style="margin-bottom: 0px;">Nome do restaurante</p><input class="border rounded d-xl-flex" type="text" style="margin-bottom: 30px;" id="name">
+                            <p style="margin-bottom: 0px;">Localização</p><input class="border rounded" type="text" style="margin-bottom: 30px;" id="address">
+                            <p style="margin-bottom: 0px;">Site</p><input class="border rounded" type="text" id="site">
+                            <div></div><button onclick="event.preventDefault(); sendRestaurant($('#name').val(), $('#address').val(), $('#site').val());" class="btn btn-primary" type="button" style="margin-top: 20px;padding-right: 60px;padding-left: 60px;background-color: rgb(43,67,83);">Enviar</button></div>
+                </div>
+                <div class="admin">
+                    <div class="heading">
+                        <h2 class="text-left d-xl-flex" style="color: rgb(58,59,64);font-family: Lato, sans-serif;font-size: 26px;height: 0px;">Aguardando Aprovação</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="row">
+                                <% for(var i = 0; i < pendings.length; i++) { %>
+                                    <% var restaurant = pendings[i] %>
+                                <div class="col-md-6 col-lg-4 project-sidebar-card contorno" style="background-color: #f5f5f5;">
+                                    <h1 style="font-size: 24px;margin-top: 10px;"><a href="detalhes?i=<%= restaurant._id %>"><%= restaurant.name %></a></h1><img class="img-fluid image scale-on-hover" src="images/nature/<%= getImage(restaurant.name) %>.jpg" style="margin-bottom: 10px;">
+                                    <p><%= getRate(restaurant.avaliacoes) %></p>
+                                    <h1 style="font-size: 17px;margin-bottom: 0px;"><%= restaurant.city %></h1>
+                                    <h1 style="font-size: 16px;"><%= restaurant.address %></h1>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -68,6 +88,7 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
     <script src="javascript/theme.js"></script>
+    <script src="javascript/client-core.js"></script>
 </body>
 
 </html>

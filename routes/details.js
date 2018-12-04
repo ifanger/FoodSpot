@@ -8,6 +8,7 @@ var params = {
   title: 'Food Spot',
 
   getRate: function (rates) {
+    if (!rates) return 0;
     if (rates.length == 0) return 0;
 
     var sum = 0;
@@ -27,6 +28,7 @@ var params = {
 
     return med;
   }
+  
 }
 
 router.get('/', function(req, res, next) {

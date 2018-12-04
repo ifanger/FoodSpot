@@ -31,10 +31,14 @@
                 <div class="col-md-6 contorno" style="background-color: #f5f5f5;">
                     <div>
                         <h1 style="margin-top: 10px;margin-bottom: 20px;"><%= restaurant.name %>
+                            <% for(var i = 0; i < Math.floor(getRate(restaurant.avaliacoes)); i++) { %>
                             <i class="fa fa-star" style="color: rgb(255,215,0);margin-left: 10px;"></i>
+                            <% } %>
                             <small><%= getRate(restaurant.avaliacoes) %></small>
                         </h1>
-                        <% var rateTotal = restaurant.avaliacoes.length %>
+                        <% var rateTotal = (restaurant.avaliacoes) ? restaurant.avaliacoes.length : 0 %>
+                        <button onclick="event.preventDefault(); removeRestaurant('<%= restaurant._id %>');" class="btn btn-danger admin" role="button">Remover Restaurante</button>
+                        <p></p>
                         <img src="images/imgexemp.png">
                         <p style="font-size: 20px;margin-bottom: 0px;">Comentários</p>
                         <p style="font-size: 18px;">0 comentários</p>
@@ -67,6 +71,7 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
     <script src="javascript/theme.js"></script>
+    <script src="javascript/client-core.js"></script>
 </body>
 
 </html>
