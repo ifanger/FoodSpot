@@ -12,7 +12,8 @@ router.get('/comment', function(req, res, next) {
   const restaurantId = req.query.restaurant;
   const response = {
     success: false,
-    message: null
+    message: null,
+    data: []
   };
 
   if (!restaurantId) {
@@ -63,6 +64,11 @@ router.post('/comment', function(req, res, next) {
 
   if (restaurantId.length != 24) {
     response.message = 'ID do restaurante é inválido.';
+    res.send(response);
+    return;
+  }
+
+  if (author.length < 4 || message.length < 4) {
     res.send(response);
     return;
   }
@@ -206,5 +212,25 @@ router.post('/login', function (req, res, next) {
 
   res.send({success: false});
 }); 
+
+router.post('/rate', function (req, res) {
+  const restaurantId = req.query.restaurant;
+  const rate = parseInt(req.query.rate);
+
+  if (!rate || rate > 5 || rate < 1) {
+    res.send({success: false});
+    return;
+  }
+
+  MongoClient.connect("mongodb://localhost:27017/foodspot", function (error, client) {
+    const db = client.db('foodspot');
+    const restaurants = db.collection('restaurants');
+
+    restaurants.updateOne({_id: ObjectID(restaurantId)}, {$push: {avaliacoes: rate}}, function (e, result) {
+      res.send({success: true});
+    });
+  });
+
+});
 
 module.exports = router;

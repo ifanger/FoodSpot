@@ -34,13 +34,14 @@
                             <% for(var i = 0; i < restaurants.length; i++) { %>
                                 <% var restaurant = restaurants[i] %>
                             <div class="col-md-6 col-lg-4 project-sidebar-card contorno" style="background-color: #f5f5f5;">
-                                <h1 style="font-size: 24px;margin-top: 10px;"><a href="detalhes?i=<%= restaurant._id %>"><%= restaurant.name %></a></h1><img class="img-fluid image scale-on-hover" src="images/nature/<%= getImage(restaurant.name) %>.jpg" style="margin-bottom: 10px;">
+                                <h1 style="font-size: 24px;margin-top: 10px;"><a href="detalhes?i=<%= restaurant._id %>"><%= restaurant.name %></a></h1><img class="img-fluid image scale-on-hover" src="<%= getImage(restaurant.name) %>" style="margin-bottom: 10px;">
                                 <p><%= getRate(restaurant.avaliacoes) %></p>
                                 <h1 style="font-size: 17px;margin-bottom: 0px;"><%= restaurant.city %></h1>
                                 <h1 style="font-size: 16px;"><%= restaurant.address %></h1>
                                 <p class="d-xl-flex justify-content-xl-end align-items-xl-center">
                                     <a class="btn btn-primary border rounded" type="button" style="background-color: rgb(46, 87, 161);margin-left: 10px;padding-top: 4px;padding-bottom: 4px;" href="detalhes?i=<%= restaurant._id %>">Informações</a>
-                                    <button class="btn btn-primary border rounded" type="button" style="background-color: rgb(232,99,10);margin-left: 10px;padding-top: 4px;padding-bottom: 4px;">Avaliar</button>
+                                    <button 
+                                    onclick="window.location = '/avaliar?id=<%= restaurant._id %>'" class="btn btn-primary border rounded" type="button" style="background-color: rgb(232,99,10);margin-left: 10px;padding-top: 4px;padding-bottom: 4px;">Avaliar</button>
                                 </p>
                             </div>
                             <% } %>
@@ -65,7 +66,7 @@
                                 <% for(var i = 0; i < pendings.length; i++) { %>
                                     <% var restaurant = pendings[i] %>
                                 <div class="col-md-6 col-lg-4 project-sidebar-card contorno" style="background-color: #f5f5f5;">
-                                    <h1 style="font-size: 24px;margin-top: 10px;"><a href="detalhes?i=<%= restaurant._id %>"><%= restaurant.name %></a></h1><img class="img-fluid image scale-on-hover" src="images/nature/<%= getImage(restaurant.name) %>.jpg" style="margin-bottom: 10px;">
+                                    <h1 style="font-size: 24px;margin-top: 10px;"><a href="detalhes?i=<%= restaurant._id %>"><%= restaurant.name %></a></h1><img class="img-fluid image scale-on-hover" src="<%= getImage(restaurant.name) %>" style="margin-bottom: 10px;">
                                     <p><%= getRate(restaurant.avaliacoes) %></p>
                                     <h1 style="font-size: 17px;margin-bottom: 0px;"><%= restaurant.city %></h1>
                                     <h1 style="font-size: 16px;"><%= restaurant.address %></h1>

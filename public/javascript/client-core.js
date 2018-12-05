@@ -4,11 +4,22 @@ $(function () {
   }
 });
 
-var isAdmin = function() {
-  return (document.cookie == 'admin=true');
+function adminCheck() {
+  aler('a');
+  if (!isAdmin()) {
+    $('.admin').css('display', 'none');
+  }
 }
 
-var login = function(user, password, feedback) {
+function goToURL(url) {
+  window.location.href = 'http://127.0.0.1:3000' + url;
+}
+
+function isAdmin() {
+  return (document.cookie == 'admin=true') || (document.cookie == 'admin=true; ');
+}
+
+function login(user, password, feedback) {
   $.ajax({
     url: '/api/login?username=' + user + '&password=' + password,
     type: 'POST',
@@ -19,12 +30,12 @@ var login = function(user, password, feedback) {
       }
 
       alert('Autenticado com sucesso');
-      document.location = '/';
+      goToURL('/');
     }
   });
 };
 
-var sendRestaurant = function(name, address, site) {
+function sendRestaurant(name, address, site) {
   $.ajax({
     url: '/api/restaurants?name=' + name + '&address=' + address + '&site=' + site,
     type: 'POST',
@@ -34,12 +45,12 @@ var sendRestaurant = function(name, address, site) {
         return;
       }
 
-      document.location = '/' + response.data;
+      goToURL('/' + response.data);
     }
   });
 };
 
-var removeRestaurant = function(id) {
+function removeRestaurant(id) {
   $.ajax({
     url: '/api/restaurants?id=' + id,
     type: 'DELETE',
@@ -49,17 +60,56 @@ var removeRestaurant = function(id) {
         return;
       }
 
-      document.location = '/';
+      goToURL('/');
     }
   });
-};
+}
 
-var getComments = function(restaurantId) {
+function rateRestaurant(restaurant, rate, feedback) {
+  $.ajax({
+    url: '/api/rate?restaurant=' + restaurant + '&rate=' + rate,
+    type: 'POST',
+    success: function(response) {
+      if (!response.success) {
+        $(feedback).html('Selecione uma nota para avaliar');
+        return;
+      }
+
+      alert('Avaliado com sucesso!');
+      goToURL('/detalhes?i=' + restaurant);
+    }
+  });
+}
+
+function commentRestaurant(restaurant, author, message, feedback) {
+  $.ajax({
+    url: '/api/comment?restaurant=' + restaurant + '&author=' + $(author).val() + '&message=' + $(message).val(),
+    type: 'POST',
+    success: function(response) {
+      if (!response.success) {
+        $(feedback).html('Preencha todos os campos corretamente.');
+        return;
+      }
+      goToURL('/detalhes?i=' + restaurant);
+    }
+  });
+}
+
+function getComments(restaurantId, target) {
   $.ajax({
     url: '/api/comment?restaurant=' + restaurantId,
     type: 'GET',
     success: function(result) {
-      alert(JSON.stringify(result))
+      if (!result) {
+        return;
+      }
+
+      for (var i = 0; i < result.data.length; i++) {
+        var comment = result.data[i];
+        $(target).html($(target).html() + '<p style="font-weight: bold;">' + comment.author + '</p><p>' + comment.message + '</p>')
+      }
     }
   });
-};
+
+  adminCheck();
+}
